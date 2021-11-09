@@ -2,10 +2,12 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#include "ConstantBuffer.h"
 #include "CodeBuffer.h"
 #include "Token.h"
 #include "Lexer.h"
 #include "Parser.h"
+#include "Debug.h"
 
 #define MAX_INPUT 100
 
@@ -21,10 +23,10 @@ void run(const char* source) {
 
     //Here the parser should have to take care of getting the tokens and translating it to IR
     Parser parser;
-    initParser(&parser, &lexer);    
-    
+    initParser(&parser, &lexer, &codeBuffer);        
     parse(&parser);
 
+    disassembleCodeBuffer(&codeBuffer);    
     freeCodeBuffer(&codeBuffer);
 }
 
