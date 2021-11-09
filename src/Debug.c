@@ -23,7 +23,6 @@ static int disassembleOpCode(CodeBuffer* buffer, int offset) {
             fprintf(stderr, "[ERROR] Unknown upcode: %d", opcode);
             return offset + 1;
     }
-    return 0;
 }
 
 void disassembleCodeBuffer(CodeBuffer* buffer) {
