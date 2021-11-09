@@ -25,18 +25,61 @@ static int writeConstant(CodeBuffer* buffer, int value) {
     return writeConstantBuffer(&buffer->values, value);
 }
 
-static void parseBinary(Parser* parser) {
-    
+static void consume(Parser* parser, tok_type type) {
+    if (parser->currentToken.type == type) {
+        advanceParser(parser);
+        return;
+    }
+
+    //Change this to explaing semantic errors
+    exit(1);
 }
+
+static void expression(Parser* parser);
 
 static void parseNumber(Parser* parser) {
-    int number = atoi(parser->currentToken.start); 
-    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number));
-      
+    int number = atoi(parser->previousToken.start); 
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number)); 
+    advanceParser(parser);
 }
 
-void parse(Parser* parser) {
-    if (parser->currentToken.type == number)
-        parseNumber(parser);
-    advanceParser(parser); 
+static void parseUnary(Parser* parser) {
+   if (parser->previousToken.type == op_minus) {
+       advanceParser(parser);
+       parseNumber(parser);
+       return writeByte(parser->buffer, OP_NEGATE);
+   }
+
+   parseNumber(parser);
+}
+
+static void parseTerm(Parser* parser) {
+    parseUnary(parser);
+
+    if (parser->previousToken.type == op_times || parser->previousToken.type == op_divide) {
+        tok_type operator = parser->previousToken.type;
+        advanceParser(parser);
+        parseTerm(parser);
+        writeByte(parser->buffer, (operator == op_times) ? OP_MULTIPLY : OP_DIVIDE); 
+    }
+}
+
+static void parseSum(Parser* parser) {
+    parseTerm(parser);
+
+    if (parser->previousToken.type == op_plus || parser->previousToken.type == op_minus) {
+        tok_type operator = parser->previousToken.type;
+        advanceParser(parser);
+        parseSum(parser);
+        writeByte(parser->buffer, (operator == op_plus) ? OP_ADD : OP_SUBSTRACT);
+    }
+}
+
+static void expression(Parser* parser) {
+    parseSum(parser);
+}
+
+void parse(Parser* parser) { 
+    advanceParser(parser);
+    expression(parser);
 }
