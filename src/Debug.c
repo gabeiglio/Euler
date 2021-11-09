@@ -6,8 +6,8 @@ static int printSimpleOpCode(const char* name, int offset) {
 }
 
 static int printConstantOpCode(const char* name, CodeBuffer* buffer, int offset) {
-    printf("OP_CONSTANT: %i\n", buffer->values.values[(int)buffer->data[offset + 1]]);
-    return offset + 1;
+    printf("OP_CONSTANT: %i\n", buffer->values.values[buffer->data[offset + 1]]);
+    return offset + 2;
 }
 
 static int disassembleOpCode(CodeBuffer* buffer, int offset) {
