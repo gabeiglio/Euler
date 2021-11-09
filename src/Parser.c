@@ -1,9 +1,10 @@
 #include "Parser.h"
 
-void initParser(Parser* parser, Lexer* lexer) {
+void initParser(Parser* parser, Lexer* lexer, CodeBuffer* buffer) {
     parser->lexer = lexer;
     parser->currentToken = lexToken(parser->lexer);
     parser->previousToken = parser->currentToken;
+    parser->buffer = buffer;
 }
 
 static void advanceParser(Parser* parser) {
@@ -11,21 +12,31 @@ static void advanceParser(Parser* parser) {
     parser->currentToken = lexToken(parser->lexer); 
 }
 
-static int writeConstant(CodeBuffer* buffer, int value) {
-    return 0;
+static void writeByte(CodeBuffer* buffer, uint8_t byte) {
+    writeCodeBuffer(buffer, byte);
 }
 
-static void parseBinary() {
+static void writeBytes(CodeBuffer* buffer, uint8_t byte1, uint8_t byte2) {
+    writeByte(buffer, byte1);
+    writeByte(buffer, byte2);
+}
+
+static int writeConstant(CodeBuffer* buffer, int value) {
+    return writeConstantBuffer(&buffer->values, value);
+}
+
+static void parseBinary(Parser* parser) {
     
 }
 
 static void parseNumber(Parser* parser) {
-    int number = atoi(parser->currentToken.start);   
+    int number = atoi(parser->currentToken.start); 
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number));
+      
 }
 
 void parse(Parser* parser) {
-    while(parser->currentToken.type != tok_eof) {
-        printf("%i", parser->currentToken.type);        
-        advanceParser(parser);
-    }
+    if (parser->currentToken.type == number)
+        parseNumber(parser);
+    advanceParser(parser); 
 }
