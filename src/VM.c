@@ -36,6 +36,10 @@ int interpret(VM* vm) {
                 push(vm, val);
                 break;
             }
+            case OP_NEGATE: {
+                push(vm, -pop(vm));
+                break;
+            }
             case OP_ADD: {
                 int rhs = pop(vm);
                 int lhs = pop(vm);
