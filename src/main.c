@@ -7,6 +7,7 @@
 #include "Token.h"
 #include "Lexer.h"
 #include "Parser.h"
+#include "VM.h"
 #include "Debug.h"
 
 #define MAX_INPUT 100
@@ -26,7 +27,13 @@ void run(const char* source) {
     initParser(&parser, &lexer, &codeBuffer);        
     parse(&parser);
 
-    disassembleCodeBuffer(&codeBuffer);    
+    disassembleCodeBuffer(&codeBuffer); 
+
+    // Now for the fun part Virtual machine
+    VM vm;
+    initVM(&vm, &codeBuffer);
+    printf("%i\n", interpret(&vm));
+   
     freeCodeBuffer(&codeBuffer);
 }
 

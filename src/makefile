@@ -1,4 +1,4 @@
 
 euler:
-	clang Token.h Lexer.c Codebuffer.c ConstantBuffer.c Parser.c Debug.c main.c && ./a.out
+	clang Token.h Lexer.c Codebuffer.c ConstantBuffer.c Parser.c Debug.c VM.c main.c && ./a.out
 
