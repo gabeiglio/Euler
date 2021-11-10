@@ -26,7 +26,7 @@ static int writeConstant(CodeBuffer* buffer, int value) {
 }
 
 static void consume(Parser* parser, tok_type type) {
-    if (parser->currentToken.type == type) {
+    if (parser->previousToken.type == type) {
         advanceParser(parser);
         return;
     }
@@ -37,20 +37,34 @@ static void consume(Parser* parser, tok_type type) {
 
 static void expression(Parser* parser);
 
+static void parseGrouping(Parser* parser) {
+    consume(parser, open_paren);
+    expression(parser);
+    consume(parser, close_paren);
+}
+
 static void parseNumber(Parser* parser) {
     int number = atoi(parser->previousToken.start); 
     writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number)); 
     advanceParser(parser);
 }
 
+static void parseTerminal(Parser* parser) {
+    switch (parser->previousToken.type) {
+        case number: parseNumber(parser); break;
+        case open_paren: parseGrouping(parser); break;
+        default: exit(1);
+    }
+}
+
 static void parseUnary(Parser* parser) {
    if (parser->previousToken.type == op_minus) {
        advanceParser(parser);
-       parseNumber(parser);
+       parseTerminal(parser);
        return writeByte(parser->buffer, OP_NEGATE);
    }
 
-   parseNumber(parser);
+   parseTerminal(parser);
 }
 
 static void parseTerm(Parser* parser) {
