@@ -82,4 +82,6 @@ static void expression(Parser* parser) {
 void parse(Parser* parser) { 
     advanceParser(parser);
     expression(parser);
+
+    writeByte(parser->buffer, OP_RETURN);
 }
