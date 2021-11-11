@@ -60,7 +60,7 @@ static void parseTerminal(Parser* parser) {
 static void parseUnary(Parser* parser) {
    if (parser->previousToken.type == op_minus) {
        advanceParser(parser);
-       parseTerminal(parser);
+       parseUnary(parser);
        return writeByte(parser->buffer, OP_NEGATE);
    }
 
