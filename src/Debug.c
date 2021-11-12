@@ -21,6 +21,9 @@ static int disassembleOpCode(CodeBuffer* buffer, int offset) {
         case OP_SUBSTRACT:return printSimpleOpCode("OP_SUBSTRACT", offset);
         case OP_NEGATE:   return printSimpleOpCode("OP_NEGATE", offset);
         case OP_RETURN:   return printSimpleOpCode("OP_RETURN", offset);
+        case OP_SIN:      return printSimpleOpCode("OP_SIN", offset);
+        case OP_COS:      return printSimpleOpCode("OP_COS", offset);
+        case OP_TAN:      return printSimpleOpCode("OP_TAN", offset);
         default:
             fprintf(stderr, "[ERROR] Unknown upcode: %d", opcode);
             return offset + 1;
