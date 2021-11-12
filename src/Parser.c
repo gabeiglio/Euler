@@ -35,6 +35,22 @@ static void consume(Parser* parser, tok_type type) {
     exit(1);
 }
 
+static op_code getFunctionOpCode(Token token) {
+    char lexeme[token.length];
+    lexeme[token.length] = '\0';
+
+    for (int i = 0; i < token.length; i++)
+        lexeme[i] = token.start[i];
+    
+    printf("%s\n", lexeme);
+    if (strcmp(lexeme, "sin") == 0) return OP_SIN;
+    if (strcmp(lexeme, "cos") == 0) return OP_COS;
+    if (strcmp(lexeme, "tan") == 0) return OP_TAN;
+    
+    //This should not happen
+    exit(2);
+}
+
 static void expression(Parser* parser);
 
 static void parseGrouping(Parser* parser) {
@@ -57,12 +73,21 @@ static void parseTerminal(Parser* parser) {
     }
 }
 
-static void parseUnary(Parser* parser) {
-   if (parser->previousToken.type == op_minus) {
-       advanceParser(parser);
-       parseUnary(parser);
-       return writeByte(parser->buffer, OP_NEGATE);
-   }
+static void parseUnary(Parser* parser) {   
+    switch (parser->previousToken.type) {
+        case op_minus: { 
+            advanceParser(parser);
+            parseUnary(parser);
+            return writeByte(parser->buffer, OP_NEGATE);
+            }
+        case identifier: {
+            uint8_t opcode = getFunctionOpCode(parser->previousToken);
+            advanceParser(parser);
+            parseUnary(parser);
+            return writeByte(parser->buffer, opcode);
+        }
+        default: break;
+    }
 
    parseTerminal(parser);
 }
