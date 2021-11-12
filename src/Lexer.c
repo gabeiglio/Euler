@@ -31,7 +31,13 @@ Token lexToken(Lexer* lexer) {
     }
 
     //Check for identifier
-    
+    if (isalpha(*lexer->current)) {
+        while (isalpha(*lexer->current))
+            lexer->current++;
+
+        return createToken(lexer, identifier);
+    }
+
     switch (*lexer->current++) {
         case '+':  return createToken(lexer, op_plus);
         case '-':  return createToken(lexer, op_minus);
@@ -39,6 +45,7 @@ Token lexToken(Lexer* lexer) {
         case '/':  return createToken(lexer, op_divide);
         case ')':  return createToken(lexer, close_paren);
         case '(':  return createToken(lexer, open_paren);
+        case '\0':
         case '\n': return createToken(lexer, tok_eof);
         default:   return createToken(lexer, tok_error);
     }
