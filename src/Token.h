@@ -3,6 +3,7 @@
 
 typedef enum {
     number,
+    identifier,
     op_plus,
     op_minus,
     op_times,
