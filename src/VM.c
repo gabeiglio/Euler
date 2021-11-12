@@ -1,5 +1,4 @@
 #include "VM.h"
-#include <stdio.h>
 
 void initVM(VM* vm, CodeBuffer* buffer) {
     vm->buffer = buffer;
@@ -63,7 +62,19 @@ int interpret(VM* vm) {
                 int lhs = pop(vm);
                 push(vm, lhs / rhs);
                 break;
-            } 
+            }
+            case OP_SIN: {
+                push(vm, sin(pop(vm)));
+                break;
+            }
+            case OP_COS: {
+                push(vm, cos(pop(vm)));
+                break;
+            }
+            case OP_TAN: {
+                push(vm, tan(pop(vm)));
+                break;
+            }
             case OP_RETURN: return pop(vm);
         }
     }

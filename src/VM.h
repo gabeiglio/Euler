@@ -1,6 +1,7 @@
 #ifndef vm_h
 #define vm_h
 
+#include <math.h>
 #include "CodeBuffer.h"
 
 #define STACK_MAX 256
