@@ -10,11 +10,11 @@ typedef struct {
     CodeBuffer* buffer;
     uint8_t* ip;
 
-    int stack[STACK_MAX];
-    int* stackTop;
+    double stack[STACK_MAX];
+    double* stackTop;
 } VM;
 
 void initVM(VM* vm, CodeBuffer* buffer);
-int interpret(VM* vm);
+double interpret(VM* vm);
 
 #endif

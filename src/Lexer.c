@@ -24,7 +24,7 @@ Token lexToken(Lexer* lexer) {
     lexer->start = lexer->current;
     
     if (isdigit(*lexer->current)) {
-        while (isdigit(*lexer->current))
+        while (isdigit(*lexer->current) || *lexer->current == '.')
             lexer->current++;
 
         return createToken(lexer, number);

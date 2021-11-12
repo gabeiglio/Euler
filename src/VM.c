@@ -10,12 +10,12 @@ static void resetStack(VM* vm) {
     vm->stackTop = vm->stack;
 }
 
-static void push(VM* vm, int value) {
+static void push(VM* vm, double value) {
     *vm->stackTop = value;
     vm->stackTop++;
 }
 
-static int pop(VM* vm) {
+static double pop(VM* vm) {
     vm->stackTop--;
     return *vm->stackTop;
 }
@@ -24,14 +24,14 @@ static int peek(VM* vm, int distance) {
     return vm->stackTop[-1 - distance];
 }
 
-int interpret(VM* vm) {
+double interpret(VM* vm) {
 #define READ_BYTE() (*vm->ip++)
 #define READ_CONSTANT() (vm->buffer->values.values[READ_BYTE()])
     for (;;) {
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             case OP_CONSTANT: {
-                int val = READ_CONSTANT();
+                double val = READ_CONSTANT();
                 push(vm, val);
                 break;
             }
@@ -40,26 +40,26 @@ int interpret(VM* vm) {
                 break;
             }
             case OP_ADD: {
-                int rhs = pop(vm);
-                int lhs = pop(vm);
+                double rhs = pop(vm);
+                double lhs = pop(vm);
                 push(vm, lhs + rhs);
                 break;
             }
             case OP_SUBSTRACT: {
-                int rhs = pop(vm);
-                int lhs = pop(vm);
+                double rhs = pop(vm);
+                double lhs = pop(vm);
                 push(vm, lhs - rhs);
                 break;
             }
             case OP_MULTIPLY: {
-                int rhs = pop(vm);
-                int lhs = pop(vm);
+                double rhs = pop(vm);
+                double lhs = pop(vm);
                 push(vm, lhs * rhs);
                 break;
             } 
             case OP_DIVIDE: {
-                int rhs = pop(vm);
-                int lhs = pop(vm);
+                double rhs = pop(vm);
+                double lhs = pop(vm);
                 push(vm, lhs / rhs);
                 break;
             }

@@ -8,11 +8,11 @@ typedef struct {
     int size;
     int count;
 
-    int* values;
+    double* values;
 } ConstantBuffer;
 
 void initConstantBuffer(ConstantBuffer* buffer);
 void freeConstantBuffer(ConstantBuffer* buffer);
-int writeConstantBuffer(ConstantBuffer* buffer, int value);
+double writeConstantBuffer(ConstantBuffer* buffer, double value);
 
 #endif

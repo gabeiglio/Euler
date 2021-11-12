@@ -21,7 +21,7 @@ static void writeBytes(CodeBuffer* buffer, uint8_t byte1, uint8_t byte2) {
     writeByte(buffer, byte2);
 }
 
-static int writeConstant(CodeBuffer* buffer, int value) {
+static int writeConstant(CodeBuffer* buffer, double value) {
     return writeConstantBuffer(&buffer->values, value);
 }
 
@@ -60,7 +60,7 @@ static void parseGrouping(Parser* parser) {
 }
 
 static void parseNumber(Parser* parser) {
-    int number = atoi(parser->previousToken.start); 
+    double number = strtod(parser->previousToken.start, NULL); 
     writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number)); 
     advanceParser(parser);
 }

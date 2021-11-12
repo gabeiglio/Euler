@@ -32,7 +32,7 @@ void run(const char* source) {
     // Now for the fun part Virtual machine
     VM vm;
     initVM(&vm, &codeBuffer);
-    printf("%i\n", interpret(&vm));
+    printf("%f\n", interpret(&vm));
    
     freeCodeBuffer(&codeBuffer);
 }

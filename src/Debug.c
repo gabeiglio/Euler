@@ -6,7 +6,7 @@ static int printSimpleOpCode(const char* name, int offset) {
 }
 
 static int printConstantOpCode(const char* name, CodeBuffer* buffer, int offset) {
-    printf("OP_CONSTANT: %i", buffer->values.values[buffer->data[offset + 1]]);
+    printf("OP_CONSTANT: %f", buffer->values.values[buffer->data[offset + 1]]);
     return offset + 2;
 }
 
