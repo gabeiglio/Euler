@@ -13,6 +13,9 @@ typedef enum {
     OP_DIVIDE,
     OP_MULTIPLY,
     OP_NEGATE,
+    OP_SIN,
+    OP_COS,
+    OP_TAN,
     OP_RETURN
 } op_code;
 
