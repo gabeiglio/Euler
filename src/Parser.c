@@ -42,7 +42,6 @@ static op_code getFunctionOpCode(Token token) {
     for (int i = 0; i < token.length; i++)
         lexeme[i] = token.start[i];
     
-    printf("%s\n", lexeme);
     if (strcmp(lexeme, "sin") == 0) return OP_SIN;
     if (strcmp(lexeme, "cos") == 0) return OP_COS;
     if (strcmp(lexeme, "tan") == 0) return OP_TAN;
