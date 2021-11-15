@@ -45,6 +45,7 @@ Token lexToken(Lexer* lexer) {
         case '/':  return createToken(lexer, op_divide);
         case ')':  return createToken(lexer, close_paren);
         case '(':  return createToken(lexer, open_paren);
+        case '=':  return createToken(lexer, tok_equals);
         case '\0':
         case '\n': return createToken(lexer, tok_eof);
         default:   return createToken(lexer, tok_error);

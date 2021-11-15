@@ -72,23 +72,34 @@ static void parseTerminal(Parser* parser) {
     }
 }
 
-static void parseUnary(Parser* parser) {   
-    switch (parser->previousToken.type) {
-        case op_minus: { 
-            advanceParser(parser);
-            parseUnary(parser);
-            return writeByte(parser->buffer, OP_NEGATE);
-            }
-        case identifier: {
+static void parseCallOrAssignmentExpr(Parser* parser) {
+    if (parser->previousToken.type == identifier) {
+        //function call
+        if (parser->currentToken.type == open_paren) {
             uint8_t opcode = getFunctionOpCode(parser->previousToken);
             advanceParser(parser);
-            parseUnary(parser);
+            parseCallOrAssignmentExpr(parser);
             return writeByte(parser->buffer, opcode);
         }
-        default: break;
+
+        //assignment expr, not yet implemented
+        if (parser->previousToken.type == tok_equals) {
+            consume(parser, tok_equals);
+            writeByte(parser->buffer, OP_SET_GLOBAL);
+            
+        }
     }
 
-   parseTerminal(parser);
+    parseTerminal(parser);
+}
+
+static void parseUnary(Parser* parser) {   
+    if (parser->previousToken.type == op_minus) {
+        advanceParser(parser);
+        parseUnary(parser);
+        return writeByte(parser->buffer, OP_NEGATE);
+    }
+    parseCallOrAssignmentExpr(parser);
 }
 
 static void parseTerm(Parser* parser) {
@@ -116,6 +127,7 @@ static void parseSum(Parser* parser) {
 static void expression(Parser* parser) {
     parseSum(parser);
 }
+
 
 void parse(Parser* parser) { 
     advanceParser(parser);

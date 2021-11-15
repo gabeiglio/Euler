@@ -10,6 +10,7 @@ typedef enum {
     op_divide,
     open_paren,
     close_paren,
+    tok_equals,
     tok_eof,
     tok_error
 } tok_type;

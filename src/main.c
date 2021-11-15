@@ -12,7 +12,7 @@
 
 #define MAX_INPUT 100
 
-void run(const char* source) {
+void run(VM* vm, const char* source) {
 
     //Initialize lexer
     Lexer lexer;
@@ -27,18 +27,19 @@ void run(const char* source) {
     initParser(&parser, &lexer, &codeBuffer);        
     parse(&parser);
 
-    disassembleCodeBuffer(&codeBuffer); 
+    //disassembleCodeBuffer(&codeBuffer); 
 
     // Now for the fun part Virtual machine
-    VM vm;
-    initVM(&vm, &codeBuffer);
-    printf("%f\n", interpret(&vm));
+    initVM(vm, &codeBuffer);
+    printf("%f\n", interpret(vm));
    
     freeCodeBuffer(&codeBuffer);
 }
 
 int main(int argc, char* argv[]) {
     char input[MAX_INPUT];
+
+    VM vm;
 
     while (1) {
         
@@ -47,6 +48,6 @@ int main(int argc, char* argv[]) {
         fgets(input, MAX_INPUT, stdin);
 
         //Output
-        run(input);
+        run(&vm, input);
     }
 }
