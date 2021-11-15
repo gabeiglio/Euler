@@ -85,8 +85,6 @@ static void parseCallOrAssignmentExpr(Parser* parser) {
         //assignment expr, not yet implemented
         if (parser->previousToken.type == tok_equals) {
             consume(parser, tok_equals);
-            writeByte(parser->buffer, OP_SET_GLOBAL);
-            
         }
     }
 
