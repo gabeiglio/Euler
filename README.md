@@ -10,7 +10,25 @@ Simple arithmetic
 > (2 + 12) * (2 - -2) / 1
 56
 ```
-
+Trigonometric functions (sin, cos, tan)
+```
+> sin(12)
+-0.53657291
+```
+Variable Assignment
+```
+> x = 1/2
+x = 0.5
+> x + 1
+1.5
+```
+Function declaration
+```
+> f(x) = x * 2
+f(x) = x * 2
+> f(2)
+4
+```
 ### Features:
 - Arithmetic expressions (addition, substraction, division and multiplication)
 - Trigonometric functions sin, cos, tan
