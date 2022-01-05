@@ -14,6 +14,7 @@ void initMap(Hashmap* map) {
         exit(1);
     }
 
+    map->entries = tmp;
 }
 
 void freeMap(Hashmap* map) {
@@ -77,5 +78,4 @@ double getEntry(Hashmap* map, const char* key) {
 
     return -1;
 }
-
 
