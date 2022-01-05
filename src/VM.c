@@ -2,6 +2,12 @@
 
 void initVM(VM* vm) {
     vm->stackTop = vm->stack;
+
+    //Init hashtable and load constants
+    initMap(&vm->map);
+
+    setEntry(&vm->map, "pi", M_PI);
+    setEntry(&vm->map, "e", M_E);
 }
 
 static void resetStack(VM* vm) {
