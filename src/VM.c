@@ -1,8 +1,6 @@
 #include "VM.h"
 
-void initVM(VM* vm, CodeBuffer* buffer) {
-    vm->buffer = buffer;
-    vm->ip = buffer->data;
+void initVM(VM* vm) {
     vm->stackTop = vm->stack;
 }
 
@@ -24,7 +22,11 @@ static int peek(VM* vm, int distance) {
     return vm->stackTop[-1 - distance];
 }
 
-double interpret(VM* vm) {
+double interpret(VM* vm, CodeBuffer* buffer) {
+
+    vm->buffer = buffer;
+    vm->ip = buffer->data;
+
 #define READ_BYTE() (*vm->ip++)
 #define READ_CONSTANT() (vm->buffer->values.values[READ_BYTE()])
     for (;;) {

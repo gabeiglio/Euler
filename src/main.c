@@ -30,8 +30,7 @@ void run(VM* vm, const char* source) {
     //disassembleCodeBuffer(&codeBuffer); 
 
     // Now for the fun part Virtual machine
-    initVM(vm, &codeBuffer);
-    printf("%f\n", interpret(vm));
+    printf("%f\n", interpret(vm, &codeBuffer));
    
     freeCodeBuffer(&codeBuffer);
 }
@@ -40,6 +39,7 @@ int main(int argc, char* argv[]) {
     char input[MAX_INPUT];
 
     VM vm;
+    initVM(&vm);
 
     while (1) {
         
