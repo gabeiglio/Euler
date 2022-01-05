@@ -6,7 +6,14 @@
 void initMap(Hashmap* map) {
     map->count = 0;
     map->capacity = 8;
-    map->entries = malloc(sizeof(Entry) * map->capacity);
+    
+    Entry* tmp = malloc(sizeof(Entry) * map->capacity);
+    
+    if (!tmp) {
+        fprintf(stderr, "[ERROR] Could not initialize map: memory\n");
+        exit(1);
+    }
+
 }
 
 void freeMap(Hashmap* map) {
@@ -32,7 +39,7 @@ static Entry* findEntry(Entry* entries, int capacity, const char* key) {
 
     for (;;) {
         Entry* entry = &entries[index];
-        if (entry->key == NULL || strcmp(key, entry->key) == 0) {
+        if (entry->key == NULL || entry->key == key) {
             return entry;
         }
         
@@ -40,7 +47,7 @@ static Entry* findEntry(Entry* entries, int capacity, const char* key) {
     }
 }
 
-void setEntry(Hashmap* map, const char* key, int value) {
+void setEntry(Hashmap* map, const char* key, double value) {
     if (map->count + 1 > map->capacity * MAX_LOAD_CAPACITY) {
         map->capacity *= 2; 
         Entry* tmp = realloc(map->entries, sizeof(Entry) * map->capacity);
@@ -62,7 +69,7 @@ void setEntry(Hashmap* map, const char* key, int value) {
     entry->value = value;
 }
 
-int getEntry(Hashmap* map, const char* key) {
+double getEntry(Hashmap* map, const char* key) {
     if (map->count == 0) return -1;
 
     Entry* result = findEntry(map->entries, map->capacity, key);

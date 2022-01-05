@@ -8,7 +8,7 @@
 
 typedef struct {
     const char* key;
-    int value;
+    double value;
 } Entry;
 
 typedef struct {
@@ -20,7 +20,7 @@ typedef struct {
 void initMap(Hashmap* map);
 void freeMap(Hashmap* map);
 
-void setEntry(Hashmap* map, const char* key, int value);
-int getEntry(Hashmap* map, const char* key);
+void setEntry(Hashmap* map, const char* key, double value);
+double getEntry(Hashmap* map, const char* key);
 
 #endif
