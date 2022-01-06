@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "ConstantBuffer.h"
 #include "CodeBuffer.h"
@@ -46,6 +47,9 @@ int main(int argc, char* argv[]) {
         //Input
         printf("\n> ");
         fgets(input, MAX_INPUT, stdin);
+        
+        //remove trailing new line
+        input[strlen(input) - 1] = '\0';
 
         //Output
         run(&vm, input);
