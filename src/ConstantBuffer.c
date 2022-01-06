@@ -4,7 +4,7 @@ void initConstantBuffer(ConstantBuffer* buffer) {
     buffer->size = 8;
     buffer->count = 0;
 
-    double* tmp = malloc(sizeof(double) * buffer->size);
+    Constant* tmp = malloc(sizeof(Constant) * buffer->size);
 
     if (!tmp) {
         fprintf(stderr, "[ERROR] Could not allocate more memory");
@@ -15,11 +15,11 @@ void initConstantBuffer(ConstantBuffer* buffer) {
 }
 
 // return the index if the allocated valuer on the constant buffer
-double writeConstantBuffer(ConstantBuffer* buffer, double value) {
+int writeConstantBuffer(ConstantBuffer* buffer, Constant value) {
     if (buffer->size < buffer->count + 1) {
         buffer->size *= 2;
 
-        double* tmp = realloc(buffer->values, sizeof(double) * buffer->size);
+        Constant* tmp = realloc(buffer->values, sizeof(Constant) * buffer->size);
 
         if (!tmp) {
             fprintf(stderr, "[ERROR] Could not allocate more memory");
