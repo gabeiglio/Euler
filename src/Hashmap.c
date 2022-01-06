@@ -37,13 +37,13 @@ static uint32_t hash(const char* key) {
 
 static Entry* findEntry(Entry* entries, int capacity, const char* key) {
     uint32_t index = hash(key) % capacity;
-
+    
     for (;;) {
         Entry* entry = &entries[index];
-        if (entry->key == NULL || entry->key == key) {
-            return entry;
-        }
-        
+
+        if (entry->key == NULL) return entry;
+        if (strcmp(entry->key, key) == 0) return entry;
+
         index = (index + 1) % capacity;
     }
 }
@@ -74,8 +74,8 @@ double getEntry(Hashmap* map, const char* key) {
     if (map->count == 0) return -1;
 
     Entry* result = findEntry(map->entries, map->capacity, key);
-    if (result != NULL) return result->value;
-
+    if (result->key != NULL) return result->value;
+    
     return -1;
 }
 
