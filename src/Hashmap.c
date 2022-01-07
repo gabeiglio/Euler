@@ -35,16 +35,16 @@ static uint32_t hash(const char* key) {
     return hash;
 }
 
-static Entry* findEntry(Entry* entries, int capacity, const char* key) {
-    uint32_t index = hash(key) % capacity;
+static Entry* findEntry(Hashmap* map, const char* key) {
+    uint32_t index = hash(key) % map->capacity;
     
     for (;;) {
-        Entry* entry = &entries[index];
-
+        Entry* entry = &map->entries[index];
+       
         if (entry->key == NULL) return entry;
         if (strcmp(entry->key, key) == 0) return entry;
 
-        index = (index + 1) % capacity;
+        index = (index + 1) % map->capacity;
     }
 }
 
@@ -61,7 +61,7 @@ void setEntry(Hashmap* map, const char* key, double value) {
         map->entries = tmp;
     }
 
-    Entry* entry = findEntry(map->entries, map->capacity, key);
+    Entry* entry = findEntry(map, key);
     bool isNewKey = entry->key == NULL;
 
     if (isNewKey) map->count++;
@@ -71,9 +71,10 @@ void setEntry(Hashmap* map, const char* key, double value) {
 }
 
 double getEntry(Hashmap* map, const char* key) {
+    
     if (map->count == 0) return -1;
 
-    Entry* result = findEntry(map->entries, map->capacity, key);
+    Entry* result = findEntry(map, key);
     if (result->key != NULL) return result->value;
     
     return -1;
