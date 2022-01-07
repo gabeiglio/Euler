@@ -21,7 +21,7 @@ static void writeBytes(CodeBuffer* buffer, uint8_t byte1, uint8_t byte2) {
     writeByte(buffer, byte2);
 }
 
-static int writeConstant(CodeBuffer* buffer, double value) {
+static int writeConstant(CodeBuffer* buffer, Constant value) {
     return writeConstantBuffer(&buffer->values, value);
 }
 
@@ -59,14 +59,28 @@ static void parseGrouping(Parser* parser) {
 }
 
 static void parseNumber(Parser* parser) {
-    double number = strtod(parser->previousToken.start, NULL); 
-    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, number)); 
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, NUMBER_CONST(strtod(parser->previousToken.start, NULL )))); 
+    advanceParser(parser);
+}
+
+static void parseIdentifier(Parser* parser) {
+    //Create key until lexeme length, if not it will copy the rest of the source
+    char key[parser->previousToken.length];
+    key[parser->previousToken.length] = '\0';
+
+    for (int i = 0; i < parser->previousToken.length; i++) {
+        key[i] = parser->previousToken.start[i];
+    }
+
+    printf("parser key: %s, made key: %s\n", parser->previousToken.start, key);
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, IDENTIFIER_CONST(key)));
     advanceParser(parser);
 }
 
 static void parseTerminal(Parser* parser) {
     switch (parser->previousToken.type) {
-        case number: parseNumber(parser); break;
+        case number:     parseNumber(parser); break;
+        case identifier: parseIdentifier(parser); break;
         case open_paren: parseGrouping(parser); break;
         default: exit(1);
     }
