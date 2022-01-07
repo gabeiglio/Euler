@@ -28,6 +28,19 @@ static int peek(VM* vm, int distance) {
     return vm->stackTop[-1 - distance];
 }
 
+static double handleConstant(Hashmap* map, Constant constant) {
+    switch (constant.type) {
+        case CONST_NUMBER: return AS_NUMBER(constant);
+        case CONST_IDENTIFIER: {
+            double result = getEntry(map, AS_IDENTIFIER(constant));
+            printf("Casting as a sting in vm is: %s\n", AS_IDENTIFIER(constant));
+            if (result == -1) exit(11);
+            return result;
+        }
+        default: exit(10);
+    }
+}
+
 double interpret(VM* vm, CodeBuffer* buffer) {
 
     vm->buffer = buffer;
@@ -39,8 +52,7 @@ double interpret(VM* vm, CodeBuffer* buffer) {
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             case OP_CONSTANT: {
-                double val = READ_CONSTANT();
-                push(vm, val);
+                push(vm, handleConstant(&vm->map, READ_CONSTANT()));
                 break;
             }
             case OP_NEGATE: {
