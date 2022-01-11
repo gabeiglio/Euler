@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct {
+    const char* start;
+    int length;
+} String;
+
 typedef enum {
     CONST_NUMBER,
     CONST_IDENTIFIER
@@ -14,7 +19,7 @@ typedef struct {
    
    union {
        double number;
-       const char* identifier;
+       String* identifier;
    } as;
 
 } Constant;
@@ -36,7 +41,7 @@ typedef struct {
 
 //Macro to create object as type
 #define NUMBER_CONST(value) ((Constant){CONST_NUMBER, {.number = value} })
-#define IDENTIFIER_CONST(value) ((Constant){CONST_IDENTIFIER, {.identifier = value}})
+#define IDENTIFIER_CONST(value) ((Constant){CONST_IDENTIFIER, {.identifier = (String*)value}})
 
 void initConstantBuffer(ConstantBuffer* buffer);
 void freeConstantBuffer(ConstantBuffer* buffer);
