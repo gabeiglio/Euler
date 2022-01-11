@@ -14,31 +14,18 @@ static void resetStack(VM* vm) {
     vm->stackTop = vm->stack;
 }
 
-static void push(VM* vm, double value) {
+static void push(VM* vm, Constant value) {
     *vm->stackTop = value;
     vm->stackTop++;
 }
 
-static double pop(VM* vm) {
+static Constant pop(VM* vm) {
     vm->stackTop--;
     return *vm->stackTop;
 }
 
-static int peek(VM* vm, int distance) {
+static Constant peek(VM* vm, int distance) {
     return vm->stackTop[-1 - distance];
-}
-
-static double handleConstant(Hashmap* map, Constant constant) {
-    switch (constant.type) {
-        case CONST_NUMBER: return AS_NUMBER(constant);
-        case CONST_IDENTIFIER: {
-            double result = getEntry(map, AS_IDENTIFIER(constant));
-            printf("Casting as a sting in vm is: %s\n", AS_IDENTIFIER(constant));
-            if (result == -1) exit(11);
-            return result;
-        }
-        default: exit(10);
-    }
 }
 
 double interpret(VM* vm, CodeBuffer* buffer) {
@@ -52,50 +39,73 @@ double interpret(VM* vm, CodeBuffer* buffer) {
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             case OP_CONSTANT: {
-                push(vm, handleConstant(&vm->map, READ_CONSTANT()));
+                Constant currentConst = READ_CONSTANT();
+                
+                if (IS_NUMBER(currentConst)) {
+                    push(vm, currentConst);
+                    break;
+                }
+
+                if (IS_IDENTIFIER(currentConst)) {
+                    String* str = AS_IDENTIFIER(currentConst);
+                   
+                    printf("Start: %s, Length: %i\n", str->start, str->length);
+
+                    char key[str->length];
+                    key[str->length] = '\0';
+
+                    for (int i = 0; i < str->length; i++)
+                        key[i] = str->start[i];
+
+                    printf("Resulting key: %s\n", key);
+                    double result = getEntry(&vm->map, key);
+
+                    if (result != -1)
+                        push(vm, NUMBER_CONST(result));
+                }
                 break;
             }
             case OP_NEGATE: {
-                push(vm, -pop(vm));
+                push(vm, NUMBER_CONST(-AS_NUMBER(pop(vm))));
                 break;
             }
             case OP_ADD: {
-                double rhs = pop(vm);
-                double lhs = pop(vm);
-                push(vm, lhs + rhs);
+                double rhs = AS_NUMBER(pop(vm));
+                double lhs = AS_NUMBER(pop(vm));
+                push(vm, NUMBER_CONST(lhs + rhs));
                 break;
             }
             case OP_SUBSTRACT: {
-                double rhs = pop(vm);
-                double lhs = pop(vm);
-                push(vm, lhs - rhs);
+                double rhs = AS_NUMBER(pop(vm));
+                double lhs = AS_NUMBER(pop(vm));
+                push(vm, NUMBER_CONST(lhs - rhs));
                 break;
             }
             case OP_MULTIPLY: {
-                double rhs = pop(vm);
-                double lhs = pop(vm);
-                push(vm, lhs * rhs);
+                double rhs = AS_NUMBER(pop(vm));
+                double lhs = AS_NUMBER(pop(vm));
+                push(vm, NUMBER_CONST(lhs * rhs));
                 break;
             } 
             case OP_DIVIDE: {
-                double rhs = pop(vm);
-                double lhs = pop(vm);
-                push(vm, lhs / rhs);
+                double rhs = AS_NUMBER(pop(vm));
+                double lhs = AS_NUMBER(pop(vm));
+                push(vm, NUMBER_CONST(lhs / rhs));
                 break;
             }
             case OP_SIN: {
-                push(vm, sin(pop(vm)));
+                push(vm, NUMBER_CONST(sin(AS_NUMBER(pop(vm)))));
                 break;
             }
             case OP_COS: {
-                push(vm, cos(pop(vm)));
+                push(vm, NUMBER_CONST(cos(AS_NUMBER(pop(vm)))));
                 break;
             }
             case OP_TAN: {
-                push(vm, tan(pop(vm)));
+                push(vm, NUMBER_CONST(tan(AS_NUMBER(pop(vm)))));
                 break;
             }
-            case OP_RETURN: return pop(vm);
+            case OP_RETURN: return AS_NUMBER(pop(vm));
         }
     }
 #undef READ_BYTE

@@ -12,8 +12,8 @@ typedef struct {
     CodeBuffer* buffer;
     uint8_t* ip;
 
-    double stack[STACK_MAX];
-    double* stackTop;
+    Constant stack[STACK_MAX];
+    Constant* stackTop;
 
     Hashmap map;
 } VM;
