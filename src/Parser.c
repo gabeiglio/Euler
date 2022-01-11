@@ -64,16 +64,9 @@ static void parseNumber(Parser* parser) {
 }
 
 static void parseIdentifier(Parser* parser) {
-    //Create key until lexeme length, if not it will copy the rest of the source
-    char key[parser->previousToken.length];
-    key[parser->previousToken.length] = '\0';
-
-    for (int i = 0; i < parser->previousToken.length; i++) {
-        key[i] = parser->previousToken.start[i];
-    }
-
-    printf("parser key: %s, made key: %s\n", parser->previousToken.start, key);
-    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, IDENTIFIER_CONST(key)));
+    
+    String str = {parser->previousToken.start, parser->previousToken.length};
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, IDENTIFIER_CONST(&str)));
     advanceParser(parser);
 }
 
