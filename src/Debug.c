@@ -11,7 +11,7 @@ static int printConstantOpCode(const char* name, CodeBuffer* buffer, int offset)
 
     switch (result.type) {
         case CONST_NUMBER: printf("OP_CONSTANT: %f", AS_NUMBER(result)); break;
-        case CONST_IDENTIFIER: printf("OP_CONSTANT: %s", AS_IDENTIFIER(result)); break;
+        case CONST_IDENTIFIER: printf("OP_CONSTANT: %s", AS_IDENTIFIER(result)->start); break;
     }
     return offset + 2;
 }
