@@ -18,6 +18,7 @@ Trigonometric functions (sin, cos, tan)
 ### Features:
 - Arithmetic expressions (addition, substraction, division and multiplication)
 - Trigonometric functions sin, cos, tan
+- Constants like pi and e
 
 ### Installation
 For now it has only been tested on OS X and clang so I would not be surprised if it only works on that enviroment.
