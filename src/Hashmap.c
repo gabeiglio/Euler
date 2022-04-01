@@ -65,7 +65,7 @@ void setEntry(Hashmap* map, const char* key, double value) {
     bool isNewKey = entry->key == NULL;
 
     if (isNewKey) map->count++;
-
+    
     entry->key = key;
     entry->value = value;
 }

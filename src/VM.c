@@ -1,13 +1,14 @@
 #include "VM.h"
 
-void initVM(VM* vm) {
+void initVM(VM* vm, Hashmap* map) {
     vm->stackTop = vm->stack;
 
     //Init hashtable and load constants
-    initMap(&vm->map);
+    vm->map = map;
+    setEntry(vm->map, "pi", M_PI);
+    setEntry(vm->map, "e", M_E);
 
-    setEntry(&vm->map, "pi", M_PI);
-    setEntry(&vm->map, "e", M_E);
+    //printf("[Hashmap in vm] Getting pi: %f\n", getEntry(vm->map, "pi"));
 }
 
 static void resetStack(VM* vm) {
@@ -49,16 +50,13 @@ double interpret(VM* vm, CodeBuffer* buffer) {
                 if (IS_IDENTIFIER(currentConst)) {
                     String* str = AS_IDENTIFIER(currentConst);
                    
-                    printf("Start: %s, Length: %i\n", str->start, str->length);
-
                     char key[str->length];
                     key[str->length] = '\0';
 
                     for (int i = 0; i < str->length; i++)
                         key[i] = str->start[i];
 
-                    printf("Resulting key: %s\n", key);
-                    double result = getEntry(&vm->map, key);
+                    double result = getEntry(vm->map, key);
 
                     if (result != -1)
                         push(vm, NUMBER_CONST(result));

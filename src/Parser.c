@@ -1,10 +1,12 @@
 #include "Parser.h"
 
-void initParser(Parser* parser, Lexer* lexer, CodeBuffer* buffer) {
+void initParser(Parser* parser, Lexer* lexer, CodeBuffer* buffer, Hashmap* map) {
     parser->lexer = lexer;
     parser->currentToken = lexToken(parser->lexer);
     parser->previousToken = parser->currentToken;
     parser->buffer = buffer;
+
+    parser->map = map;
 }
 
 static void advanceParser(Parser* parser) {
@@ -31,8 +33,7 @@ static void consume(Parser* parser, tok_type type) {
         return;
     }
 
-    //Change this to explaing semantic errors
-    exit(1);
+    fprintf(stderr, "[ERROR] Did not expect token of type %i\n", parser->previousToken.type);
 }
 
 static op_code getFunctionOpCode(Token token) {
@@ -47,7 +48,8 @@ static op_code getFunctionOpCode(Token token) {
     if (strcmp(lexeme, "tan") == 0) return OP_TAN;
     
     //This should not happen
-    exit(2);
+    fprintf(stderr, "[ERROR]: Function not defined\n");
+    exit(1);
 }
 
 static void expression(Parser* parser);
@@ -64,9 +66,17 @@ static void parseNumber(Parser* parser) {
 }
 
 static void parseIdentifier(Parser* parser) {
+    if (parser->currentToken.type == tok_equals) return;
     
-    String str = {parser->previousToken.start, parser->previousToken.length};
-    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, IDENTIFIER_CONST(&str)));
+    char lexeme[parser->previousToken.length];
+    lexeme[parser->previousToken.length] = '\0';
+
+    for (int i = 0; i < parser->previousToken.length; i++)
+        lexeme[i] = parser->previousToken.start[i];
+
+    double value = getEntry(parser->map, lexeme);
+
+    writeBytes(parser->buffer, OP_CONSTANT, writeConstant(parser->buffer, NUMBER_CONST(value)));
     advanceParser(parser);
 }
 
@@ -75,7 +85,8 @@ static void parseTerminal(Parser* parser) {
         case number:     parseNumber(parser); break;
         case identifier: parseIdentifier(parser); break;
         case open_paren: parseGrouping(parser); break;
-        default: exit(1);
+        default: 
+             fprintf(stderr, "[ERROR] Token not recognized\n");
     }
 }
 

@@ -15,10 +15,10 @@ typedef struct {
     Constant stack[STACK_MAX];
     Constant* stackTop;
 
-    Hashmap map;
+    Hashmap* map;
 } VM;
 
-void initVM(VM* vm);
+void initVM(VM* vm, Hashmap* map);
 double interpret(VM* vm, CodeBuffer* buffer);
 
 #endif

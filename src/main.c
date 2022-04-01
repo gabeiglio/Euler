@@ -10,6 +10,7 @@
 #include "Parser.h"
 #include "VM.h"
 #include "Debug.h"
+#include "Hashmap.h"
 
 #define MAX_INPUT 100
 
@@ -25,10 +26,10 @@ void run(VM* vm, const char* source) {
 
     //Here the parser should have to take care of getting the tokens and translating it to IR
     Parser parser;
-    initParser(&parser, &lexer, &codeBuffer);        
+    initParser(&parser, &lexer, &codeBuffer, vm->map);        
     parse(&parser);
 
-    //disassembleCodeBuffer(&codeBuffer); 
+    disassembleCodeBuffer(&codeBuffer); 
 
     // Now for the fun part Virtual machine
     printf("%f\n", interpret(vm, &codeBuffer));
@@ -39,8 +40,11 @@ void run(VM* vm, const char* source) {
 int main(int argc, char* argv[]) {
     char input[MAX_INPUT];
 
+    Hashmap map;
+    initMap(&map);    
+
     VM vm;
-    initVM(&vm);
+    initVM(&vm, &map);
 
     while (1) {
         
