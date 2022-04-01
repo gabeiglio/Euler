@@ -55,9 +55,9 @@ static op_code getFunctionOpCode(Token token) {
 static void expression(Parser* parser);
 
 static void parseGrouping(Parser* parser) {
-    consume(parser, open_paren);
+    consume(parser, tok_open_paren);
     expression(parser);
-    consume(parser, close_paren);
+    consume(parser, tok_close_paren);
 }
 
 static void parseNumber(Parser* parser) {
@@ -84,7 +84,7 @@ static void parseTerminal(Parser* parser) {
     switch (parser->previousToken.type) {
         case number:     parseNumber(parser); break;
         case identifier: parseIdentifier(parser); break;
-        case open_paren: parseGrouping(parser); break;
+        case tok_open_paren: parseGrouping(parser); break;
         default: 
              fprintf(stderr, "[ERROR] Token not recognized\n");
     }
@@ -93,7 +93,7 @@ static void parseTerminal(Parser* parser) {
 static void parseCallOrAssignmentExpr(Parser* parser) {
     if (parser->previousToken.type == identifier) {
         //function call
-        if (parser->currentToken.type == open_paren) {
+        if (parser->currentToken.type == tok_open_paren) {
             uint8_t opcode = getFunctionOpCode(parser->previousToken);
             advanceParser(parser);
             parseCallOrAssignmentExpr(parser);
@@ -110,7 +110,7 @@ static void parseCallOrAssignmentExpr(Parser* parser) {
 }
 
 static void parseUnary(Parser* parser) {   
-    if (parser->previousToken.type == op_minus) {
+    if (parser->previousToken.type == tok_dash) {
         advanceParser(parser);
         parseUnary(parser);
         return writeByte(parser->buffer, OP_NEGATE);
@@ -121,22 +121,22 @@ static void parseUnary(Parser* parser) {
 static void parseTerm(Parser* parser) {
     parseUnary(parser);
 
-    if (parser->previousToken.type == op_times || parser->previousToken.type == op_divide) {
+    if (parser->previousToken.type == tok_star || parser->previousToken.type == tok_slash) {
         tok_type operator = parser->previousToken.type;
         advanceParser(parser);
         parseTerm(parser);
-        writeByte(parser->buffer, (operator == op_times) ? OP_MULTIPLY : OP_DIVIDE); 
+        writeByte(parser->buffer, (operator == tok_star) ? OP_MULTIPLY : OP_DIVIDE); 
     }
 }
 
 static void parseSum(Parser* parser) {
     parseTerm(parser);
 
-    if (parser->previousToken.type == op_plus || parser->previousToken.type == op_minus) {
+    if (parser->previousToken.type == tok_plus || parser->previousToken.type == tok_dash) {
         tok_type operator = parser->previousToken.type;
         advanceParser(parser);
         parseSum(parser);
-        writeByte(parser->buffer, (operator == op_plus) ? OP_ADD : OP_SUBSTRACT);
+        writeByte(parser->buffer, (operator == tok_plus) ? OP_ADD : OP_SUBSTRACT);
     }
 }
 

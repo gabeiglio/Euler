@@ -4,12 +4,12 @@
 typedef enum {
     number,
     identifier,
-    op_plus,
-    op_minus,
-    op_times,
-    op_divide,
-    open_paren,
-    close_paren,
+    tok_plus,
+    tok_dash,
+    tok_star,
+    tok_slash,
+    tok_open_paren,
+    tok_close_paren,
     tok_equals,
     tok_eof,
     tok_error
