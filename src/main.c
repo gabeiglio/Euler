@@ -1,50 +1,12 @@
 #include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "ConstantBuffer.h"
-#include "CodeBuffer.h"
-#include "Token.h"
-#include "Lexer.h"
-#include "Parser.h"
-#include "VM.h"
-#include "Debug.h"
-#include "Hashmap.h"
+#include "euler.c"
 
 #define MAX_INPUT 100
 
-void run(VM* vm, const char* source) {
-
-    //Initialize lexer
-    Lexer lexer;
-    initLexer(&lexer, source);
-   
-    //Initialize code buffer for storing the outputs outputed by the parser
-    CodeBuffer codeBuffer;
-    initCodeBuffer(&codeBuffer);
-
-    //Here the parser should have to take care of getting the tokens and translating it to IR
-    Parser parser;
-    initParser(&parser, &lexer, &codeBuffer, vm->map);        
-    parse(&parser);
-
-    disassembleCodeBuffer(&codeBuffer); 
-
-    // Now for the fun part Virtual machine
-    printf("%f\n", interpret(vm, &codeBuffer));
-   
-    freeCodeBuffer(&codeBuffer);
-}
-
 int main(int argc, char* argv[]) {
+    euler_main();
+
     char input[MAX_INPUT];
-
-    Hashmap map;
-    initMap(&map);    
-
-    VM vm;
-    initVM(&vm, &map);
 
     while (1) {
         
@@ -56,6 +18,6 @@ int main(int argc, char* argv[]) {
         input[strlen(input) - 1] = '\0';
 
         //Output
-        run(&vm, input);
+        printf("%f\n",euler(input));
     }
 }
