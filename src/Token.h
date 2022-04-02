@@ -8,6 +8,7 @@ typedef enum {
     tok_dash,
     tok_star,
     tok_slash,
+    tok_power,
     tok_open_paren,
     tok_close_paren,
     tok_equals,

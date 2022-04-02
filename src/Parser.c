@@ -118,8 +118,18 @@ static void parseUnary(Parser* parser) {
     parseCallOrAssignmentExpr(parser);
 }
 
-static void parseTerm(Parser* parser) {
+static void parsePower(Parser* parser) {
     parseUnary(parser);
+
+    if (parser->previousToken.type == tok_power) {
+        advanceParser(parser);
+        parsePower(parser);
+        writeByte(parser->buffer, OP_POWER);
+    }
+}
+
+static void parseTerm(Parser* parser) {
+    parsePower(parser);
 
     if (parser->previousToken.type == tok_star || parser->previousToken.type == tok_slash) {
         tok_type operator = parser->previousToken.type;

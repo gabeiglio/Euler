@@ -7,8 +7,6 @@ void initVM(VM* vm, Hashmap* map) {
     vm->map = map;
     setEntry(vm->map, "pi", M_PI);
     setEntry(vm->map, "e", M_E);
-
-    //printf("[Hashmap in vm] Getting pi: %f\n", getEntry(vm->map, "pi"));
 }
 
 static void resetStack(VM* vm) {
@@ -85,6 +83,12 @@ double interpret(VM* vm, CodeBuffer* buffer) {
                 push(vm, NUMBER_CONST(lhs * rhs));
                 break;
             } 
+            case OP_POWER: {
+                double rhs = AS_NUMBER(pop(vm));
+                double lhs = AS_NUMBER(pop(vm));
+                push(vm, NUMBER_CONST(pow(lhs,rhs)));
+                break;
+            }
             case OP_DIVIDE: {
                 double rhs = AS_NUMBER(pop(vm));
                 double lhs = AS_NUMBER(pop(vm));
