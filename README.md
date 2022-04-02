@@ -16,7 +16,7 @@ Trigonometric functions (sin, cos, tan)
 -0.53657291
 ```
 ### Features:
-- Arithmetic expressions (addition, substraction, division and multiplication)
+- Arithmetic expressions (addition, substraction, division and multiplication, and exponenciation)
 - Trigonometric functions sin, cos, tan
 - Constants like pi and e
 
